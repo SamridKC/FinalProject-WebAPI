@@ -19,4 +19,5 @@ app.post('/post', function (req, res) {
   res.send(req.body);
 });
 
-http.createServer(app).listen(8080);
+app.use('/', router);
+app.listen(process.env.PORT || 8080);
