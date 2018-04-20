@@ -1,0 +1,9 @@
+npm install dotenv --save
+npm install express --save
+npm install body-parser --save
+npm install passport --save
+npm install passport-http --save
+npm install jsonwebtoken --save
+npm install passport-jwt --save
+npm install bcrypt-nodejs --save
+
