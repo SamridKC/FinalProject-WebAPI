@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
-//var Movie = require('./Movie');
+var Charity = require('./Charity');
 var jwt = require('jsonwebtoken');
 
 var app = express();
@@ -29,6 +29,8 @@ router.route('/postjwt')
         }
     );
 
+
+//Users
 router.route('/users/:userId')
     .get(authJwtController.isAuthenticated, function (req, res) {
         var id = req.params.userId;
@@ -98,11 +100,83 @@ router.post('/signin', function(req, res) {
     });
 });
 
+
+//Charity CRUD
+router.post('/Charity/Save', function(req, res) { // save/create a new charity
+        if (!req.body.Name) {
+            res.json({success: false, msg: 'Please pass Name of Charity'});
+        }
+
+        if (!req.body.Amount) {
+            res.json({success: false, msg: 'Please pass Amount.'});
+        }
+
+        else {
+
+            var charity = new Charity();
+            charity.Name = req.body.Name;
+            charity.Amount = req.body.Amount;
+
+            charity.save(function(err) {
+                if (err) {
+                    return res.send(err);
+                }
+                res.json({ message: 'Charity saved!' });
+            });
+        }
+    });
+
+router.get('/Charity/GetAll', function (req, res) {   // Get all Charities
+        Charity.find(function (err, charities) {
+            if (err) res.send(err);
+            // return the charities
+            res.json(charities);
+        });
+    });
+
+router.get('/Charity/Get/:charityName', function (req, res) {  // Get by Name
+        var Name = {Name: req.params.charityName};
+        Charity.find(Name, function(err, charity) {
+            if (err) res.send(err);
+
+            if(!charity.length) return res.json({message: 'No such charity in DB'});
+            // return that charity
+            res.json(charity);
+        });
+    });
+
+router.delete('/Charity/Delete/:charityName', function (req, res) {   // Delete by name
+        var Name = {Name: req.params.charityName};
+            //charity.remove();
+            Charity.findOneAndRemove(Name, function(err, charity) {
+                if (err) return res.send(err);
+
+                if(!charity) return res.json({ message: 'No such charity in DB!'});
+
+                res.json({ message: 'Charity has been deleted' });
+        });
+    });
+
+router.put('/Charity/Update/:charityName', function(req, res) {   // Update by Name
+        var Name = {Name: req.params.charityName};
+        var opts = {runValidators : true};
+
+        Charity.findOneAndUpdate(Name, req.body, opts, function(err, charity) {
+            if (err) return res.send(err.message);
+
+            if(!charity) return res.json({ message: 'No such charity in DB!'});
+
+            res.json({ message: 'Charity has been updated!' });
+        });
+    });
+
 app.use('/', router);
 // app.listen(process.env.PORT || 8080);
 app.listen(process.env.PORT || 3000, function(){
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
+
+
 
 // var express = require('express');
 // var http = require('http');
