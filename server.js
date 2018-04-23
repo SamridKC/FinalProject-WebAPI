@@ -8,6 +8,7 @@ var authJwtController = require('./auth_jwt');
 var User = require('./Users');
 var Charity = require('./Charity');
 var jwt = require('jsonwebtoken');
+var Transaction = require('./Transaction');
 
 var app = express();
 app.use(bodyParser.json());
@@ -169,6 +170,47 @@ router.put('/Charity/Update/:charityName', function(req, res) {   // Update by N
             res.json({ message: 'Charity has been updated!' });
         });
     });
+
+//Transaction CRUD
+router.post('/Transaction/Save', function(req, res) { // save/create a new charity
+
+    var d = new Date();
+
+    if (!req.body.Name) {
+        res.json({success: false, msg: 'Please pass Name.'});
+    }
+
+    if (!req.body.Date) {
+        res.json({success: false, msg: 'Please pass Date.'});
+    }
+
+    if (!req.body.Total) {
+        res.json({success: false, msg: 'Please pass Total.'});
+    }
+
+    if (!req.body.CreditCard) {
+        res.json({success: false, msg: 'Please pass Credit Card.'});
+    }
+
+
+    else {
+
+        var transaction = new Transaction();
+        transaction.Name = req.body.Name;
+   //     transaction.Date = req.body.Date;
+        transaction.Date = d;
+        transaction.Total = req.body.Total;
+        transaction.CreditCard = req.body.CreditCard;
+
+
+        transaction.save(function(err) {
+            if (err) {
+                return res.send(err);
+            }
+            res.json({ message: 'Transaction saved!' });
+        });
+    }
+});
 
 app.use('/', router);
 // app.listen(process.env.PORT || 8080);
