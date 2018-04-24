@@ -62,6 +62,7 @@ router.post('/signup', function(req, res) {
         user.name = req.body.name;
         user.username = req.body.username;
         user.password = req.body.password;
+        user.TotalDonation = req.body.TotalDonation;
         // save the user
         user.save(function(err) {
             if (err) {
@@ -103,7 +104,9 @@ router.post('/signin', function(req, res) {
 
 
 //Charity CRUD
-router.post('/Charity/Save', function(req, res) { // save/create a new charity
+
+router.route('/Charity/Save')
+    .post(authJwtController.isAuthenticated, function(req, res) { // save/create a new charity
         if (!req.body.Name) {
             res.json({success: false, msg: 'Please pass Name of Charity'});
         }
@@ -127,7 +130,14 @@ router.post('/Charity/Save', function(req, res) { // save/create a new charity
         }
     });
 
-router.get('/Charity/GetAll', function (req, res) {   // Get all Charities
+// router.route('/users')
+//     .get(authJwtController.isAuthenticated, function (req, res) {
+//
+//
+//     }
+
+router.route('/Charity/GetAll')
+    .get(authJwtController.isAuthenticated, function (req, res) {   // Get all Charities
         Charity.find(function (err, charities) {
             if (err) res.send(err);
             // return the charities
@@ -135,7 +145,8 @@ router.get('/Charity/GetAll', function (req, res) {   // Get all Charities
         });
     });
 
-router.get('/Charity/Get/:charityName', function (req, res) {  // Get by Name
+router.route('/Charity/Get/:charityName')
+    .get(authJwtController.isAuthenticated, function (req, res) {  // Get by Name
         var Name = {Name: req.params.charityName};
         Charity.find(Name, function(err, charity) {
             if (err) res.send(err);
@@ -146,7 +157,8 @@ router.get('/Charity/Get/:charityName', function (req, res) {  // Get by Name
         });
     });
 
-router.delete('/Charity/Delete/:charityName', function (req, res) {   // Delete by name
+router.route('/Charity/Delete/:charityName')
+    .delete(authJwtController.isAuthenticated, function (req, res) {   // Delete by name
         var Name = {Name: req.params.charityName};
             //charity.remove();
             Charity.findOneAndRemove(Name, function(err, charity) {
@@ -158,7 +170,8 @@ router.delete('/Charity/Delete/:charityName', function (req, res) {   // Delete 
         });
     });
 
-router.put('/Charity/Update/:charityName', function(req, res) {   // Update by Name
+router.route('/Charity/Update/:charityName')
+    .put(authJwtController.isAuthenticated, function(req, res) {   // Update by Name
         var Name = {Name: req.params.charityName};
         var opts = {runValidators : true};
 
@@ -171,18 +184,20 @@ router.put('/Charity/Update/:charityName', function(req, res) {   // Update by N
         });
     });
 
-//Transaction CRUD
-router.post('/Transaction/Save', function(req, res) { // save/create a new charity
+// //Transaction Create and Read
+router.route('/Transaction/Save')
+    .post(authJwtController.isAuthenticated, function(req, res) { // save/create a new charity
 
     var d = new Date();
+    var totalPlusDonation;
 
     if (!req.body.Name) {
         res.json({success: false, msg: 'Please pass Name.'});
     }
 
-    if (!req.body.Date) {
-        res.json({success: false, msg: 'Please pass Date.'});
-    }
+    // if (!req.body.Date) {
+    //     res.json({success: false, msg: 'Please pass Date.'});
+    // }
 
     if (!req.body.Total) {
         res.json({success: false, msg: 'Please pass Total.'});
@@ -190,6 +205,10 @@ router.post('/Transaction/Save', function(req, res) { // save/create a new chari
 
     if (!req.body.CreditCard) {
         res.json({success: false, msg: 'Please pass Credit Card.'});
+    }
+
+    if (!req.body.ExpirationDate) {
+            res.json({success: false, msg: 'Please pass Expiration Date.'});
     }
 
 
@@ -201,6 +220,47 @@ router.post('/Transaction/Save', function(req, res) { // save/create a new chari
         transaction.Date = d;
         transaction.Total = req.body.Total;
         transaction.CreditCard = req.body.CreditCard;
+        transaction.ExpirationDate = req.body.ExpirationDate;
+        if(req.query.donation === 'true') {
+        totalPlusDonation = Math.ceil(req.body.Total);
+        transaction.DonationAmount = (totalPlusDonation - req.body.Total).toFixed(2);  // floating point upto 2 decimal points
+        }
+        else {
+            transaction.DonationAmount = 0;
+        }
+        transaction.CharityName = req.body.CharityName;
+
+        //*********
+//          var UserName = {UserName: req.params.Name};
+//         User.findOne(UserName, function(err, nameUser) {
+//        User.findOne({name: req.body.Name}).select('name').exec(function (err, nameUser) {
+
+        User.findOne({name: req.body.Name}, function(err, nameUser) {
+
+        if (err) res.send(err);
+            // return that charity
+            nameUser.TotalDonation += transaction.DonationAmount;
+            nameUser.save(function(err) {
+                if (err) {
+                    return res.send(err);
+                }
+            });
+        });
+
+        Charity.findOne({Name: req.body.CharityName}, function(err, nameCharity) {
+
+            if (err) res.send(err);
+            // return that charity
+            nameCharity.Amount += transaction.DonationAmount;
+            nameCharity.save(function(err) {
+                if (err) {
+                    return res.send(err);
+                }
+            });
+        });
+
+        // //*********
+
 
 
         transaction.save(function(err) {
@@ -209,8 +269,75 @@ router.post('/Transaction/Save', function(req, res) { // save/create a new chari
             }
             res.json({ message: 'Transaction saved!' });
         });
+
+
+        //
     }
 });
+
+
+// router.route('/Transaction/Save')
+//     .post(authJwtController.isAuthenticated, function(req, res) { // save/create a new transaction
+//
+//         var d = new Date();
+//         var totalPlusDonation;
+//
+//         // var id = req.params.userID;
+//         // User.findById(id, function (err, user_) {
+//         var UserName = {UserName: req.params.Name};
+//         User.find(UserName, function(err, user_) {
+//             if (err)
+//                 res.send({message: 'User not in database'});
+//             else
+//             {
+//             var transaction = new Transaction();
+//             transaction.Name = req.body.Name;
+//             transaction.Date = d;
+//             transaction.Total = req.body.Total;
+//             transaction.CreditCard = req.body.CreditCard;
+//             transaction.ExpirationDate = req.body.ExpirationDate;
+//             if(req.query.donation === 'true') {
+//             totalPlusDonation = Math.ceil(req.body.Total);
+//             transaction.DonationAmount = (totalPlusDonation - req.body.Total).toFixed(2);  // floating point upto 2 decimal points
+//             }
+//             else {
+//                 transaction.DonationAmount = 0;
+//             }
+//             transaction.CharityName = req.body.CharityName;
+//             user_.TotalDonation += transaction.DonationAmount;
+//
+//             transaction.save(function(err) {
+//                 if(err) {
+//                             res = res.status(500);
+//
+//                             return res.json(err);
+//                         }
+//
+//                         user_.save(function(err) {
+//                             if(err) {
+//                                 res = res.status(500);
+//
+//                                 return res.json(err);
+//                             }
+//
+//                             res.json({message: 'Transaction saved!'});
+//                         });
+//                     });
+//             }
+//         });
+//     });
+
+
+
+
+router.route('/Transaction/GetAll')
+    .get(authJwtController.isAuthenticated, function (req, res) {   // Get all Transactions
+        Transaction.find(function (err, transactions) {
+            if (err) res.send(err);
+            // return all transactions
+            res.json(transactions);
+        });
+    });
 
 app.use('/', router);
 // app.listen(process.env.PORT || 8080);

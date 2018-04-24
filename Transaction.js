@@ -9,7 +9,10 @@ var TransactionSchema = new Schema({
     Name: String,
     Date: { type: Date},
     Total: { type: Number, require: true },
-    CreditCard: {type: String, require: true, min: 12, max: 12}
+    CreditCard: {type: String, require: true, min: 12, max: 12},
+    ExpirationDate: {type: String, require: true},
+    DonationAmount: {type: Number, require: true},
+    CharityName: {type: String}
 //    charity: { type: [Charity] }
 });
 
