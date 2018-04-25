@@ -8,7 +8,8 @@ mongoose.connect(process.env.DB);
 var CharitySchema = new Schema({
     Name: { type: String, require: true, unique: true},
     Amount: { type: Number, required: true },
-    imageUrl: { type: String, required: true }
+    imageUrl: { type: String, required: true },
+    About: {type: String, required: true}
 });
 
 CharitySchema.pre('save', function(next) {

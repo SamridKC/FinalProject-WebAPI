@@ -120,12 +120,17 @@ router.route('/Charity/Save')
             res.json({success: false, msg: 'Please pass an image Url. '});
         }
 
+        if (!req.body.About) {
+            res.json({success: false, msg: 'Please pass info about the charity. '});
+        }
+
         else {
 
             var charity = new Charity();
             charity.Name = req.body.Name;
             charity.Amount = req.body.Amount;
             charity.imageUrl = req.body.imageUrl;
+            charity.About = req.body.About;
 
             charity.save(function(err) {
                 if (err) {
