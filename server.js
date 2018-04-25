@@ -9,6 +9,7 @@ var User = require('./Users');
 var Charity = require('./Charity');
 var jwt = require('jsonwebtoken');
 var Transaction = require('./Transaction');
+var Product = require('./Product');
 
 var app = express();
 app.use(bodyParser.json());
@@ -343,6 +344,47 @@ router.route('/Transaction/GetAll')
             res.json(transactions);
         });
     });
+
+
+router.route('/Product/Save')
+    .post(authJwtController.isAuthenticated, function(req, res) { // save/create a new charity
+        if (!req.body.Name) {
+            res.json({success: false, msg: 'Please pass Name of Product.'});
+        }
+
+        if (!req.body.Price) {
+            res.json({success: false, msg: 'Please pass a Price.'});
+        }
+
+        if (!req.body.imageUrl) {
+            res.json({success: false, msg: 'Please pass an image Url.'});
+        }
+
+        else {
+
+            var product = new Product();
+            product.Name = req.body.Name;
+            product.Price = req.body.Price;
+            product.imageUrl = req.body.imageUrl;
+
+            product.save(function(err) {
+                if (err) {
+                    return res.send(err);
+                }
+                res.json({ message: 'Product saved!' });
+            });
+        }
+    });
+
+router.route('/Product/GetAll')
+    .get(authJwtController.isAuthenticated, function (req, res) {   // Get all Charities
+        Product.find(function (err, products) {
+            if (err) res.send(err);
+            // return the charities
+            res.json(products);
+        });
+    });
+
 
 app.use('/', router);
 // app.listen(process.env.PORT || 8080);
