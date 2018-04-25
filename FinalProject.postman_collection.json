@@ -1,0 +1,695 @@
+{
+	"info": {
+		"name": "FinalProject",
+		"_postman_id": "01aaaa6b-f92d-240c-ad36-5f79403178aa",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign up",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "52bf9524-ef58-4fa3-8a07-95adae3a6683",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Has a user been created.\"] = jsonData.message === \"User created!\";",
+							"",
+							"tests[\"Username already exists.\"] = jsonData.message === \"A user with that username already exists. \";",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Samrid",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "Samrid",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "TotalDonation",
+							"value": "0",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/signup",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"signup"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Sign in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "760e6b90-6566-46f5-bc0e-f5f13380af02",
+						"type": "text/javascript",
+						"exec": [
+							"var jwtToken;",
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"jwtToken\", jsonData.token);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "Samrid",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/signin",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"signin"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e58fdaf1-b00e-402a-b83a-1a984eb952a1",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a0aef9f3-0524-45ed-b182-18dff7578758",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "kcsa",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/users",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get by User ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3916cb8-d032-443d-a449-13339a4c4be0",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/users/5adebf2d0174c106521b9150",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users",
+						"5adebf2d0174c106521b9150"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Save New Charity",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "01d6efbe-8aee-4da5-b3ea-ec4ed88a7bb2",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b317fbd9-2816-4e63-8a44-cc21a626b743",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Movie succesfully created.\"] = jsonData.message === \"Charity saved!\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"UNICEF\",\n\t\"Amount\" : \"0\"\n}"
+				},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Charity/Save",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Charity",
+						"Save"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Charities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8e22319a-9da2-4b85-9536-5439b1d239b9",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Charity/GetAll",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Charity",
+						"GetAll"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get by Name",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Charity/Get/UNICEF",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Charity",
+						"Get",
+						"UNICEF"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete by Name",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Charity/Delete/Lala",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Charity",
+						"Delete",
+						"Lala"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update by Name",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Amount\" : \"99\"\n}"
+				},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Charity/Update/Sightsavers",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Charity",
+						"Update",
+						"Sightsavers"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Make a Transaction with Donation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "52bf9524-ef58-4fa3-8a07-95adae3a6683",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Has a user been created.\"] = jsonData.message === \"User created!\";",
+							"",
+							"tests[\"Username already exists.\"] = jsonData.message === \"A user with that username already exists. \";",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Name",
+							"value": "Samrid",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "0",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "Total",
+							"value": "88.88",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "CreditCard",
+							"value": "1111222233334444",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "ExpirationDate",
+							"value": "02/20",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "CharityName",
+							"value": "UNICEF",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Transaction/Save?donation=true",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Transaction",
+						"Save"
+					],
+					"query": [
+						{
+							"key": "donation",
+							"value": "true",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Make a Transaction without Donation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "52bf9524-ef58-4fa3-8a07-95adae3a6683",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Has a user been created.\"] = jsonData.message === \"User created!\";",
+							"",
+							"tests[\"Username already exists.\"] = jsonData.message === \"A user with that username already exists. \";",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "Name",
+							"value": "Nanu",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "Date",
+							"value": "0",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "Total",
+							"value": "299.09",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "CreditCard",
+							"value": "1111222233334444",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "ExpirationDate",
+							"value": "02/20",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "CharityName",
+							"value": "Specsavers",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Transaction/Save",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Transaction",
+						"Save"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Transactions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8e22319a-9da2-4b85-9536-5439b1d239b9",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Transaction/GetAll",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Transaction",
+						"GetAll"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
