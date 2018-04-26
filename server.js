@@ -12,6 +12,9 @@ var Transaction = require('./Transaction');
 var Product = require('./Product');
 
 var app = express();
+var cors = require('cors');
+
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
