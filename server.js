@@ -57,6 +57,27 @@ router.route('/users')
         });
     });
 
+router.route('/username/:name')
+    .get(authJwtController.isAuthenticated, function (req,res) {
+
+        var name = {name: req.params.name};
+
+        User.aggregate([
+            { "$match": {"name": String(req.params.name)} },
+            {
+                "$lookup": {
+                    "from": "transactions",
+                    "localField": "name",
+                    "foreignField": "Name",
+                    "as": "transaction"
+                }
+            }
+        ]).exec(function(err, results){
+            if(err) res.send(err);
+            return res.json(results);
+        });
+    });
+
 router.post('/signup', function(req, res) {
     if (!req.body.username || !req.body.password) {
         res.json({success: false, msg: 'Please pass username and password.'});
@@ -288,61 +309,6 @@ router.route('/Transaction/Save')
         //
     }
 });
-
-
-// router.route('/Transaction/Save')
-//     .post(authJwtController.isAuthenticated, function(req, res) { // save/create a new transaction
-//
-//         var d = new Date();
-//         var totalPlusDonation;
-//
-//         // var id = req.params.userID;
-//         // User.findById(id, function (err, user_) {
-//         var UserName = {UserName: req.params.Name};
-//         User.find(UserName, function(err, user_) {
-//             if (err)
-//                 res.send({message: 'User not in database'});
-//             else
-//             {
-//             var transaction = new Transaction();
-//             transaction.Name = req.body.Name;
-//             transaction.Date = d;
-//             transaction.Total = req.body.Total;
-//             transaction.CreditCard = req.body.CreditCard;
-//             transaction.ExpirationDate = req.body.ExpirationDate;
-//             if(req.query.donation === 'true') {
-//             totalPlusDonation = Math.ceil(req.body.Total);
-//             transaction.DonationAmount = (totalPlusDonation - req.body.Total).toFixed(2);  // floating point upto 2 decimal points
-//             }
-//             else {
-//                 transaction.DonationAmount = 0;
-//             }
-//             transaction.CharityName = req.body.CharityName;
-//             user_.TotalDonation += transaction.DonationAmount;
-//
-//             transaction.save(function(err) {
-//                 if(err) {
-//                             res = res.status(500);
-//
-//                             return res.json(err);
-//                         }
-//
-//                         user_.save(function(err) {
-//                             if(err) {
-//                                 res = res.status(500);
-//
-//                                 return res.json(err);
-//                             }
-//
-//                             res.json({message: 'Transaction saved!'});
-//                         });
-//                     });
-//             }
-//         });
-//     });
-
-
-
 
 router.route('/Transaction/GetAll')
     .get(authJwtController.isAuthenticated, function (req, res) {   // Get all Transactions
