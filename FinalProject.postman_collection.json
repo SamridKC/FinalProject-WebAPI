@@ -42,13 +42,13 @@
 					"urlencoded": [
 						{
 							"key": "name",
-							"value": "Samrid",
+							"value": "Sagar",
 							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "username",
-							"value": "Samrid",
+							"value": "Sagar",
 							"description": "",
 							"type": "text"
 						},
@@ -303,7 +303,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"Name\" : \"UNICEF\",\n\t\"Amount\" : \"0\"\n}"
+					"raw": "{\n\t\"Name\" : \"Unicef\",\n\t\"Amount\" : \"0\",\n\t\"imageUrl\": \"https://yt3.ggpht.com/a-/AJLlDp33Zxb-ghG9I-c3f9JkirTpHR2z88jeeim_6A=s900-mo-c-c0xffffffff-rj-k-no\",\n\t\"About\": \"The United Nations International Children's Fund \"\n}"
 				},
 				"url": {
 					"raw": "https://finalproject-webapi.herokuapp.com/Charity/Save",
@@ -376,7 +376,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "https://finalproject-webapi.herokuapp.com/Charity/Get/UNICEF",
+					"raw": "https://finalproject-webapi.herokuapp.com/Charity/Get/Unicef",
 					"protocol": "https",
 					"host": [
 						"finalproject-webapi",
@@ -386,7 +386,7 @@
 					"path": [
 						"Charity",
 						"Get",
-						"UNICEF"
+						"Unicef"
 					]
 				},
 				"description": ""
@@ -494,7 +494,7 @@
 					"urlencoded": [
 						{
 							"key": "Name",
-							"value": "Samrid",
+							"value": "Sagar",
 							"description": "",
 							"type": "text"
 						},
@@ -507,13 +507,13 @@
 						},
 						{
 							"key": "Total",
-							"value": "88.88",
+							"value": "23.01",
 							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "CreditCard",
-							"value": "1111222233334444",
+							"value": "1111222233334445",
 							"description": "",
 							"type": "text"
 						},
@@ -525,7 +525,7 @@
 						},
 						{
 							"key": "CharityName",
-							"value": "UNICEF",
+							"value": "Specsavers",
 							"description": "",
 							"type": "text"
 						}
@@ -685,6 +685,152 @@
 					"path": [
 						"Transaction",
 						"GetAll"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Save New Product",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "01d6efbe-8aee-4da5-b3ea-ec4ed88a7bb2",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b317fbd9-2816-4e63-8a44-cc21a626b743",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Movie succesfully created.\"] = jsonData.message === \"Charity saved!\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\" : \"Vaccum#2\",\n\t\"Price\" : \"55.05\",\n\t\"imageUrl\": \"https://www.news-medical.net/image.axd?picture=2017%2F12%2Fspecsavers_big.jpg\"\n}"
+				},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Product/Save",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Product",
+						"Save"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8e22319a-9da2-4b85-9536-5439b1d239b9",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Product/GetAll",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Product",
+						"GetAll"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get by name with transactions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3916cb8-d032-443d-a449-13339a4c4be0",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://finalproject-webapi.herokuapp.com/Name/Sagar",
+					"protocol": "https",
+					"host": [
+						"finalproject-webapi",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"Name",
+						"Sagar"
 					]
 				},
 				"description": ""
