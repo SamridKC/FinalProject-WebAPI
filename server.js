@@ -57,10 +57,10 @@ router.route('/users')
         });
     });
 
-router.route('/username/:name')
+router.route('/Name/:name')
     .get(authJwtController.isAuthenticated, function (req,res) {
 
-        var name = {name: req.params.name};
+//        var name = {name: req.params.name};
 
         User.aggregate([
             { "$match": {"name": String(req.params.name)} },
