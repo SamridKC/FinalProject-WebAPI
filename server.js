@@ -274,7 +274,7 @@ router.route('/Transaction/Save')
 
         if (err) res.send(err);
             // return that charity
-            nameUser.TotalDonation += transaction.DonationAmount;
+            nameUser.TotalDonation += transaction.DonationAmount.toFixed(2);
             nameUser.save(function(err) {
                 if (err) {
                     return res.send(err);
