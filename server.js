@@ -359,6 +359,29 @@ router.route('/Product/GetAll')
         });
     });
 
+router.route('/Product/Get/:productName')
+    .get(authJwtController.isAuthenticated, function (req, res) {  // Get by Name
+        var Name = {Name: req.params.productName};
+        Product.find(Name, function(err, product) {
+            if (err) res.send(err);
+
+            if(!product.length) return res.json({message: 'No such product in DB'});
+            // return that charity
+            res.json(product);
+        });
+    });
+
+// router.route('/Charity/Get/:charityName')
+//     .get(authJwtController.isAuthenticated, function (req, res) {  // Get by Name
+//         var Name = {Name: req.params.charityName};
+//         Charity.find(Name, function(err, charity) {
+//             if (err) res.send(err);
+//
+//             if(!charity.length) return res.json({message: 'No such charity in DB'});
+//             // return that charity
+//             res.json(charity);
+//         });
+//     });
 
 app.use('/', router);
 // app.listen(process.env.PORT || 8080);
