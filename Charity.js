@@ -7,7 +7,7 @@ mongoose.connect(process.env.DB);
 //Charity Schema
 var CharitySchema = new Schema({
     Name: { type: String, require: true, unique: true},
-    Amount: { type: Number, required: true },
+    Amount: { type: Number},
     imageUrl: { type: String, required: true },
     About: {type: String, required: true}
 });

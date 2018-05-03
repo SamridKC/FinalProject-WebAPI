@@ -136,10 +136,6 @@ router.route('/Charity/Save')
             res.json({success: false, msg: 'Please pass Name of Charity'});
         }
 
-        if (!req.body.Amount) {
-            res.json({success: false, msg: 'Please pass Amount.'});
-        }
-
         if (!req.body.imageUrl) {
             res.json({success: false, msg: 'Please pass an image Url. '});
         }
@@ -415,4 +411,3 @@ app.listen(process.env.PORT || 3000, function(){
 // app.listen(process.env.PORT || 3000, function(){
 //     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 // });
-
